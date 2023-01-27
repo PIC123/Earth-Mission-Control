@@ -18,8 +18,8 @@ public class DeskSetupManager : MonoBehaviour
     public float defaultWidth = 0.03f;
     public float defaultHeight = 0.01f;
 
-    public enum CreationState { none, length, height, finish }
-    private CreationState creationState = CreationState.none;
+    public enum CreationState { start, length, height, finish }
+    private CreationState creationState = CreationState.start;
 
     private Vector3 startLengthPosition;
     public Transform creationHand;
@@ -44,7 +44,7 @@ public class DeskSetupManager : MonoBehaviour
     {
         switch (creationState)
         {
-            case CreationState.none:
+            case CreationState.start:
                 visual.SetActive(false);
                 if (OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger))
                 {
@@ -77,7 +77,19 @@ public class DeskSetupManager : MonoBehaviour
                 }
 
                 break;
-
+            case CreationState.finish:
+                //visual.SetActive(false);
+                if (OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger))
+                {
+                    //startLengthPosition = creationHand.position;
+                    visual.SetActive(false);
+                    foreach (var item in objectsToSpawn)
+                    {
+                        item.SetActive(false);
+                    }
+                    creationState = CreationState.start;
+                }
+                break;
             default:
                 break;
         }
